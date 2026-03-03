@@ -42,3 +42,29 @@ Pour assurer la traçabilité de l'audit et prouver que le fichier n'a pas été
 * ✅ **Taille de l'APK :** 66 Ko.
 
 ![Présence de l'APK dans le dossier de travail](images/3.png)
+
+---
+
+## 🔍 Task 3 : Analyse avec JADX GUI
+
+**En résumé :** J'ai utilisé JADX GUI pour décompiler l'APK et analyser son fichier `AndroidManifest.xml`. Ce fichier est crucial car il déclare les permissions, les composants et les règles de sécurité de l'application.
+
+### 1. Informations générales de l'application
+En lisant le Manifeste, j'ai pu extraire la carte d'identité de l'APK :
+* **Package principal :** `owasp.mstg.uncrackable1`
+* **Version (versionName) :** `1.0`
+* **Version Minimale du SDK (minSdk) :** `19`
+* **Version Cible du SDK (targetSdk) :** `28`
+
+### 2. Analyse des permissions
+* **Résultat :** Aucune balise `<uses-permission>` n'est présente dans le manifeste. L'application ne requiert aucun accès spécifique au système (caméra, contacts, localisation, etc.).
+
+### 3. Analyse des composants
+* L'application possède une activité principale : `sg.vantagepoint.uncrackable1.MainActivity`.
+* ⚠️ **Attention de sécurité (Surface d'attaque) :** Cette activité possède un `<intent-filter>` (`android.intent.action.MAIN`). Cela signifie qu'elle est implicitement exportée et peut être lancée par le système ou d'autres applications.
+
+### 4. Configurations de sécurité sensibles
+* **CleartextTraffic / Debuggable :** Les attributs `android:usesCleartextTraffic="true"` et `android:debuggable="true"` sont absents. Bonne pratique de sécurité respectée.
+* 🚨 **Vulnérabilité identifiée :** L'attribut `android:allowBackup="true"` est présent. Cela constitue un risque de fuite de données, car un attaquant disposant d'un accès physique pourrait extraire les données de l'application via la commande `adb backup`.
+
+![Analyse du Manifeste avec JADX](images/4.png)
