@@ -29,3 +29,16 @@ Utilisation des librairies de compression de Windows pour lister les 20 premiers
 Pour assurer la traçabilité de l'audit et prouver que le fichier n'a pas été altéré, j'ai calculé le hash SHA-256 de l'application.
 
 ![Liste des fichiers internes et calcul du Hash SHA-256](images/2.png)
+
+---
+
+## 📦 Task 2 : Extraire/obtenir l'APK
+
+**En résumé :** L'objectif de cette étape est de valider la présence de l'APK dans notre environnement et de documenter son origine. J'ai opté pour l'Option A de mon laboratoire.
+
+**Check-list de validation :**
+* ✅ **Disponibilité :** L'APK est bien présent dans le dossier de travail `C:\APK-Analysis`.
+* ✅ **Provenance :** Application d'entraînement fournie (OWASP UnCrackable Level 1), renommée en `app-debug.apk` pour les besoins du lab.
+* ✅ **Taille de l'APK :** 66 Ko.
+
+![Présence de l'APK dans le dossier de travail](images/3.png)
