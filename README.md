@@ -82,3 +82,26 @@ En lisant le Manifeste, j'ai pu extraire la carte d'identité de l'APK :
 * **Description :** Il s'agit simplement de l'URL standard et publique utilisée par le système Android pour définir les règles du fichier XML. Il n'y a aucune fuite de données ici.
 
 ![Recherche de chaînes sensibles dans JADX](images/5.png)
+
+---
+
+## 🔄 Task 5 : Convertir DEX en JAR avec dex2jar
+
+**En résumé :** Le code de l'application est initialement compilé au format `.dex` (Dalvik Executable), optimisé pour Android mais difficile à analyser avec des outils Java classiques. L'objectif de cette étape est d'isoler ce fichier et de le traduire en une archive standard `.jar`.
+
+### 1. Extraction du fichier DEX
+J'ai utilisé PowerShell pour décompresser l'APK de manière ciblée et extraire uniquement le cœur de l'application (`classes.dex`) dans un dossier `dex_out`.
+
+![Création du dossier dex_out](images/6.png)
+
+![Extraction du fichier classes.dex](images/7.png)
+
+### 2. Conversion en JAR
+J'ai ensuite utilisé l'outil en ligne de commande `dex2jar` pour effectuer la traduction. L'opération a généré avec succès le fichier `app.jar`.
+
+```powershell
+cd C:\APK-Analysis\dex2jar
+.\d2j-dex2jar.bat "C:\APK-Analysis\dex_out\classes.dex" -o "C:\APK-Analysis\app.jar"
+```
+
+![Conversion DEX vers JAR avec dex2jar](images/8.png)
