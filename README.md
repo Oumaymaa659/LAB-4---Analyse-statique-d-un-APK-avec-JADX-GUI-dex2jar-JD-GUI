@@ -68,3 +68,17 @@ En lisant le Manifeste, j'ai pu extraire la carte d'identité de l'APK :
 * 🚨 **Vulnérabilité identifiée :** L'attribut `android:allowBackup="true"` est présent. Cela constitue un risque de fuite de données, car un attaquant disposant d'un accès physique pourrait extraire les données de l'application via la commande `adb backup`.
 
 ![Analyse du Manifeste avec JADX](images/4.png)
+
+---
+
+## 🕵️ Task 4 : Recherche de chaînes sensibles
+
+**En résumé :** L'objectif de cette étape est d'utiliser la fonction de recherche globale de JADX GUI pour débusquer d'éventuelles informations sensibles (mots de passe, clés d'API, URLs cachées) codées en dur par les développeurs. Conformément à la grille de sévérité du laboratoire, voici le rapport des 5 observations demandées.
+
+### Observation 1 : Recherche d'URLs (`http://` / `https://`)
+* **Valeur trouvée :** `http://schemas.android.com/apk/res/android`
+* **Emplacement :** `AndroidManifest.xml` (balise `manifest`)
+* **Niveau de risque :** Faible 🟢
+* **Description :** Il s'agit simplement de l'URL standard et publique utilisée par le système Android pour définir les règles du fichier XML. Il n'y a aucune fuite de données ici.
+
+![Recherche de chaînes sensibles dans JADX](images/5.png)
