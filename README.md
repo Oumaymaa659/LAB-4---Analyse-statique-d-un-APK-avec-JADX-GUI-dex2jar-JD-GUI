@@ -105,3 +105,26 @@ cd C:\APK-Analysis\dex2jar
 ```
 
 ![Conversion DEX vers JAR avec dex2jar](images/8.png)
+
+---
+
+## ⚖️ Task 6 : Comparaison JADX vs JD-GUI
+
+**En résumé :** L'objectif de cette étape est de comparer l'efficacité et le rendu de deux outils de décompilation différents : JADX GUI (qui décompile directement l'APK) et JD-GUI (qui lit le fichier JAR généré via dex2jar).
+
+Pour cette comparaison, j'ai analysé la même classe dans les deux outils : `sg.vantagepoint.uncrackable1.MainActivity`.
+
+### Tableau comparatif (3 différences notables)
+
+| Aspect | JADX GUI | JD-GUI |
+| :--- | :--- | :--- |
+| **Navigation & Structure** | Affiche la structure Android complète (AndroidManifest, ressources, code source). | Affiche uniquement la structure Java pure (packages, classes). Les spécificités Android sont absentes. |
+| **Gestion des Ressources** | Accès direct et lisible aux ressources (fichiers XML, assets, etc.). | Pas d'accès aux ressources Android, l'outil se concentre uniquement sur le bytecode Java. |
+| **Lisibilité (Obfuscation)** | Tente de reconstruire logiquement les noms de variables et offre une meilleure lisibilité globale. | Conserve très souvent les noms obfusqués (ex: `a`, `b`, `c`), ce qui rend la lecture de la logique plus complexe. |
+
+### Conclusion et outil le plus adapté
+
+* **Forces et faiblesses :** JADX est un outil "tout-en-un" parfaitement taillé pour l'écosystème Android, mais il peut parfois échouer sur des APK très complexes ou très obfusqués. JD-GUI est plus basique et rudimentaire pour de l'Android, mais la conversion préalable par `dex2jar` permet parfois de contourner certaines protections anti-décompilation qui feraient planter JADX.
+* **Verdict :** Pour un audit d'application mobile classique, **JADX GUI est largement supérieur et plus adapté** grâce à sa prise en charge native des ressources Android (comme le Manifeste) et sa meilleure lisibilité du code. JD-GUI + dex2jar reste cependant un excellent plan B à garder sous le coude.
+
+![Comparaison JADX GUI vs JD-GUI](images/9.png)
