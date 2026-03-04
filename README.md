@@ -128,3 +128,65 @@ Pour cette comparaison, j'ai analysé la même classe dans les deux outils : `sg
 * **Verdict :** Pour un audit d'application mobile classique, **JADX GUI est largement supérieur et plus adapté** grâce à sa prise en charge native des ressources Android (comme le Manifeste) et sa meilleure lisibilité du code. JD-GUI + dex2jar reste cependant un excellent plan B à garder sous le coude.
 
 ![Comparaison JADX GUI vs JD-GUI](images/9.png)
+
+---
+
+## 📋 Task 7 : Mini-rapport d'analyse statique
+
+# Rapport d'analyse statique - UnCrackable Level 1
+
+## A) Informations générales
+- **Date d'analyse :** 4 Mars 2026
+- **Analyste :** Oumayma Benhilal
+- **APK analysé :** `app-debug.apk`
+- **Version :** `1.0` (targetSdk: 28)
+- **Provenance :** Application d'entraînement OWASP (fournie)
+- **Outils utilisés :** PowerShell, JADX GUI, dex2jar, JD-GUI
+
+---
+
+## B) Résumé exécutif
+Cette analyse statique a révélé **1 vulnérabilité potentielle** liée à la configuration et a mis en évidence des **mécanismes d'auto-protection** dans l'application UnCrackable Level 1.
+
+Les principales préoccupations concernent l'autorisation de sauvegarde des données (Backup), qui pourrait conduire à une fuite d'informations locales. L'application est par ailleurs bien configurée (aucune permission inutile, pas de trafic en clair).
+
+Le niveau de risque global est évalué comme **Moyen**.
+
+**Actions prioritaires recommandées :**
+1. Désactiver la sauvegarde ADB dans le manifeste.
+2. S'assurer que les données manipulées par la `MainActivity` (exportée par défaut) sont validées.
+
+---
+
+## C) Constats détaillés
+
+### Constat #1 : Sauvegarde des données applicatives autorisée
+- **Sévérité :** Moyenne 🟡
+- **Description :** L'attribut `android:allowBackup="true"` est activé. Cela permet à quiconque de sauvegarder et de restaurer les données privées de l'application.
+- **Localisation :** `AndroidManifest.xml` (dans la balise `<application>`)
+- **Impact potentiel :** Un attaquant disposant d'un accès physique au téléphone déverrouillé (ou d'un accès ADB) pourrait extraire des données sensibles stockées localement par l'application via la commande `adb backup`.
+- **Remédiation recommandée :** Définir explicitement l'attribut `android:allowBackup="false"` dans le manifeste pour les applications traitant des données sensibles.
+
+### Constat #2 : Présence de mécanismes Anti-Débogage
+- **Sévérité :** Information / Faible 🟢
+- **Description :** Le code source contient des appels de méthodes visant à vérifier si un outil de débogage est connecté au processus de l'application.
+- **Localisation :** Classes Java (ex: appel à `android.os.Debug.isDebuggerConnected()`)
+- **Impact potentiel :** Ce n'est pas une faille, mais une protection. Cela complique l'analyse dynamique pour les auditeurs de sécurité et ralentit l'exploitation par des attaquants.
+- **Remédiation recommandée :** Bonne pratique respectée. Aucune remédiation nécessaire.
+
+### Constat #3 : Activité principale exportée implicitement
+- **Sévérité :** Faible 🟢
+- **Description :** Le composant `MainActivity` est accessible depuis l'extérieur du bac à sable de l'application car il contient un filtre d'intention (`intent-filter`).
+- **Localisation :** `AndroidManifest.xml` (`sg.vantagepoint.uncrackable1.MainActivity`)
+- **Impact potentiel :** Étant le point d'entrée de l'application (Action `MAIN`, Catégorie `LAUNCHER`), il est normal qu'elle soit exportée. Cependant, cela représente la surface d'attaque principale via les Intents externes.
+- **Remédiation recommandée :** S'assurer qu'aucune donnée reçue via l'Intent de lancement n'est traitée sans validation stricte.
+
+---
+
+## D) Annexes
+
+### Permissions demandées
+- *Aucune permission* (`<uses-permission>`) n'est requise par l'application.
+
+### Composants exportés
+- `sg.vantagepoint.uncrackable1.MainActivity` (Exporté implicitement via `intent-filter`)
