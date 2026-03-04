@@ -190,3 +190,21 @@ Le niveau de risque global est évalué comme **Moyen**.
 
 ### Composants exportés
 - `sg.vantagepoint.uncrackable1.MainActivity` (Exporté implicitement via `intent-filter`)
+
+---
+
+## 🧹 Task 8 : Nettoyage
+
+**En résumé :** La dernière étape de cet audit a consisté à sécuriser l'environnement de travail en organisant les livrables et en supprimant les traces d'analyse.
+
+### 1. Vérification et Organisation
+* **Vérification :** Le présent rapport a été relu. S'agissant d'une application d'entraînement (UnCrackable L1), aucune véritable donnée personnelle, token ou mot de passe de production n'a été exposé.
+* **Organisation :** Le code Java traduit (`app.jar`) a été archivé dans un dossier `/results`.
+
+### 2. Nettoyage des artefacts
+Pour des raisons de sécurité et de conformité, les fichiers de travail temporaires ont été détruits.
+
+```powershell
+Remove-Item -Recurse -Force .\dex_out
+Remove-Item .\app-debug.apk
+```
